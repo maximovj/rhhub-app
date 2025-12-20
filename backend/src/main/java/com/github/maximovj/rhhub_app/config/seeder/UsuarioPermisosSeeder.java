@@ -35,6 +35,7 @@ public class UsuarioPermisosSeeder implements ApplicationRunner {
                 repository.save(
                     UsuarioPermisosEntity.builder()
                     .permisoAccion("CRUD_USUARIOS")
+                    .permisoModulo("MODULO_USUARIOS")
                     .esPermitido(true)
                     .estado(estado_activo)
                     .build()

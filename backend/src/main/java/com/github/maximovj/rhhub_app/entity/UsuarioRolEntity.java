@@ -1,5 +1,6 @@
 package com.github.maximovj.rhhub_app.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -44,13 +45,18 @@ public class UsuarioRolEntity {
     // !! RELACIONES
 
     // Un rol puede tener muchos grupos
-    @OneToMany(mappedBy = "roles", cascade = CascadeType.ALL)
-    @Column(name = "ROL_GRUPO_ID", nullable = false, unique = false)
-    @JsonProperty("rol_grupo_id")
-    private List<UsuarioGruposEntity> rolGrupos;
+    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<UsuarioGruposEntity> grupos = new ArrayList<>();
+    
+    public void addGrupo(UsuarioGruposEntity grupo) {
+        grupos.add(grupo);
+        grupo.setRol(this);
+    }
 
-    // Un rol pertenece a un usuario
-    @OneToOne(mappedBy = "rol", cascade = CascadeType.ALL)
-    private UsuarioEntity usuarioRol;
+    public void removeGrupo(UsuarioGruposEntity grupo) {
+        grupos.remove(grupo);
+        grupo.setRol(null);
+    }
 
 }
