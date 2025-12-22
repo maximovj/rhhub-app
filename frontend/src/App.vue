@@ -1,7 +1,14 @@
-<script setup></script>
-
 <template>
   <router-view />
+  <AlertCustom ref="alertRef" />
 </template>
 
-<style scoped></style>
+<script>
+
+export default {
+  mounted() {
+    // Exponemos el alert globalmente
+    window.$alert = this.$refs.alertRef;
+  }
+};
+</script>
