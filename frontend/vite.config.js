@@ -25,6 +25,7 @@ export default defineConfig({
       '@plugins': fileURLToPath(new URL('./src/plugins', import.meta.url)),
       '@styles': fileURLToPath(new URL('./src/styles', import.meta.url)),
       '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
+      '@common': fileURLToPath(new URL('./src/common', import.meta.url)),
       '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
     },
   },

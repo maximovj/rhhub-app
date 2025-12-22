@@ -1,8 +1,10 @@
 import PrimeVue from 'primevue/config'
-
 import 'primeicons/primeicons.css'
 
-// Form
+// Forms (PrimeVue Forms)
+import { Form } from '@primevue/forms'
+
+// UI
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -13,6 +15,10 @@ import Calendar from 'primevue/calendar'
 import Textarea from 'primevue/textarea'
 import InputNumber from 'primevue/inputnumber'
 import ToggleSwitch from 'primevue/toggleswitch'
+
+// Layout
+import Card from 'primevue/card'
+import Fieldset from 'primevue/fieldset'
 
 // Data
 import DataTable from 'primevue/datatable'
@@ -31,7 +37,7 @@ import Menu from 'primevue/menu'
 import TieredMenu from 'primevue/tieredmenu'
 import Breadcrumb from 'primevue/breadcrumb'
 
-// Feedback
+// Services
 import ToastService from 'primevue/toastservice'
 import ConfirmationService from 'primevue/confirmationservice'
 
@@ -39,40 +45,45 @@ import ConfirmationService from 'primevue/confirmationservice'
 import Aura from '@primeuix/themes/aura'
 
 export default {
-    install(app) {
-        app.use(PrimeVue, { ripple: true })
+  install(app) {
+    app.use(PrimeVue, { ripple: true })
+    app.use(ToastService)
+    app.use(ConfirmationService)
 
-        // Services
-        app.use(ToastService)
-        app.use(ConfirmationService)
+    // Forms
+    app.component('Form', Form)
 
-        // Form
-        app.component('PButton', Button)
-        app.component('PInputText', InputText)
-        app.component('PPassword', Password)
-        app.component('PCheckbox', Checkbox)
-        app.component('PRadioButton', RadioButton)
-        app.component('PDropdown', Dropdown)
-        app.component('PCalendar', Calendar)
-        app.component('PTextarea', Textarea)
-        app.component('PInputNumber', InputNumber)
-        app.component('PToggleSwitch', ToggleSwitch)
+    // UI
+    app.component('Button', Button)
+    app.component('InputText', InputText)
+    app.component('Password', Password)
+    app.component('Checkbox', Checkbox)
+    app.component('RadioButton', RadioButton)
+    app.component('Dropdown', Dropdown)
+    app.component('Calendar', Calendar)
+    app.component('Textarea', Textarea)
+    app.component('InputNumber', InputNumber)
+    app.component('ToggleSwitch', ToggleSwitch)
 
-        // Data
-        app.component('PDataTable', DataTable)
-        app.component('PColumn', Column)
-        app.component('PPaginator', Paginator)
+    // Layout
+    app.component('Card', Card)
+    app.component('Fieldset', Fieldset)
 
-        // Overlay
-        app.component('PDialog', Dialog)
-        app.component('PConfirmDialog', ConfirmDialog)
-        app.component('PSidebar', Sidebar)
-        app.component('PToast', Toast)
+    // Data
+    app.component('DataTable', DataTable)
+    app.component('Column', Column)
+    app.component('Paginator', Paginator)
 
-        // Menu
-        app.component('PMenubar', Menubar)
-        app.component('PMenu', Menu)
-        app.component('PTieredMenu', TieredMenu)
-        app.component('PBreadcrumb', Breadcrumb)
-    }
+    // Overlay
+    app.component('Dialog', Dialog)
+    app.component('ConfirmDialog', ConfirmDialog)
+    app.component('Sidebar', Sidebar)
+    app.component('Toast', Toast)
+
+    // Menu
+    app.component('Menubar', Menubar)
+    app.component('Menu', Menu)
+    app.component('TieredMenu', TieredMenu)
+    app.component('Breadcrumb', Breadcrumb)
+  }
 }
