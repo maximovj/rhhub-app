@@ -6,10 +6,13 @@ import router from './router'
 
 //import PrimeVuePlugin from '@plugins/primevue'
 import PrimeVue from "primevue/config";
-import Aura from '@primeuix/themes/aura';
-import '@styles/main.css'
+import SportYellowPreset from './themes/SportYellowTheme'
+import '@styles/main.css';          // estilos globales
+import '@styles/theme-light.css';   // variables light
+import '@styles/theme-dark.css';    // variables dark
+import '@styles/gradients.css';     // degradados para botones/cards
 
-import { CustomIconsPlugin } from '@plugins/custom-icons'
+import CommonPlugin from './plugins/common'
 
 const app = createApp(App)
 
@@ -18,16 +21,17 @@ app.use(createPinia())
 app.use(router)
 
 app.use(PrimeVue, {
-        theme: {
-        preset: Aura,
-        options: {
-            prefix: 'p',
-            darkModeSelector: 'none', // none o system
-            cssLayer: false
-        }
-        }
+  ripple: true,
+  theme: {
+    preset: SportYellowPreset,
+    options: {
+      prefix: 'p',
+      darkModeSelector: 'none', // O 'system' si quieres que cambie automáticamente
+      cssLayer: false
+    }
+  }
 })
 
-app.use(CustomIconsPlugin)
+app.use(CommonPlugin)
 
 app.mount('#app')
