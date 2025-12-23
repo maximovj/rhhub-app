@@ -152,11 +152,28 @@ export default {
   methods: {
     isActive(path) {
       return this.route.path.startsWith(path) ? 'p-button-primary' : ''
+    },
+    async cargarUsuarios() {
+      try {
+
+        const data = await this.$utils.apiExecutar({
+          url: "/api/users",
+          method: "post",
+          data: { size: 10, page: 0 },
+          successMessage: "Usuarios cargados"
+        });
+
+        this.users = data;
+
+      } catch (e) {
+        console.error(e);
+      }
     }
   },
 
   // Montaje
   mounted() {
+    this.cargarUsuarios();
     this.$utils.setMetaTitleWelcome(this.metaTitle);
   }
 }

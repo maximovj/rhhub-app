@@ -1,3 +1,61 @@
+// utils/apiUtils.js
+import axios from "axios";
+import { useUiStore } from "@/stores/ui";
+
+export async function apiExecutar({
+  method = "get",
+  url,
+  data,
+  params,
+  headers,
+
+  showSuccess = true,
+  successMessage = null,
+  showError = true,
+  errorMessage = null
+} = {}) {
+
+  const ui = useUiStore();
+  ui.startLoading();
+
+  await new Promise((resolve, reject) => { 
+          setTimeout(() => { resolve({status: 'OK'}) }, 5500);
+        }).then(() => {});
+
+  try {
+    const response = await axios({
+      method,
+      url,
+      data,
+      params,
+      headers
+    });
+
+    if (showSuccess) {
+      window.$alert.alert({
+        title: "Aviso",
+        message: successMessage || "Operación realizada correctamente",
+      });
+    }
+
+    return response.data;
+
+  } catch (error) {
+
+    if (showError) {
+      window.$alert.alert({
+        title: "Error",
+        message: errorMessage || error.message,
+      });
+    }
+
+    throw error;
+
+  } finally {
+    ui.stopLoading();
+  }
+}
+
 export function apiExecutarV1({
   tryFetch: {
     url,

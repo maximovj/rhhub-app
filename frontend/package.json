@@ -19,6 +19,7 @@
     "@primevue/forms": "^4.5.3",
     "@tailwindcss/vite": "^4.1.18",
     "@vueuse/core": "^14.1.0",
+    "axios": "^1.13.2",
     "pinia": "^3.0.4",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
