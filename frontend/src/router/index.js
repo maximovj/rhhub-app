@@ -32,9 +32,10 @@ const router = createRouter({
 })
 
 // Guard para rutas protegidas usando Pinia
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const auth = useAuthStore()
   if (to.meta.requiresAuth && !auth.isLoggedIn()) {
+    await window.$alert.alert({ message: 'Debe iniciar sesión para continuar' });
     next('/acceder')
   } else if (to.path === '/acceder' && auth.isLoggedIn()) {
     next('/panel')
