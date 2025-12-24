@@ -7,6 +7,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.github.maximovj.rhhub_app.config.properties.SeederProperties;
@@ -36,6 +37,9 @@ public class UsuarioSeeder implements ApplicationRunner {
     @Autowired
     SeederProperties seederProperties;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
@@ -56,7 +60,7 @@ public class UsuarioSeeder implements ApplicationRunner {
             entidad = UsuarioEntity.builder()
             .usuario("admin")
             .correo("admin@admin.com")
-            .contrasena("admin@admin.com")
+            .contrasena(passwordEncoder.encode("admin@admin.com"))
             .esActivo(true)
             .token(null)
             .estado(estado.get())
