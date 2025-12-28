@@ -22,6 +22,12 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.github.maximovj.rhhub_app.config.properties.CorsProperties;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.core.userdetails.User;
@@ -36,9 +42,14 @@ public class SecurityConfig {
     private final AutenticacionJwtFilter filtroAutenticacionJwt;
 
     @Bean
-    public SecurityFilterChain filtroSeguridad(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
+    public SecurityFilterChain filtroSeguridad(
+        HttpSecurity http, 
+        AuthenticationProvider authenticationProvider,
+        CorsProperties corsProperties
+    ) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(configuracionCors(corsProperties)))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/autenticacion/**").permitAll()
                         .anyRequest().authenticated()
@@ -62,6 +73,21 @@ public class SecurityConfig {
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(codificadorPassword());
         return provider;
+    }
+
+    @Bean
+    public CorsConfigurationSource configuracionCors(CorsProperties corsProperties) {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        corsProperties.getAllowedOrigins().forEach(configuration::addAllowedOriginPattern);
+        corsProperties.getAllowedMethods().forEach(configuration::addAllowedMethod);
+        corsProperties.getAllowedHeaders().forEach(configuration::addAllowedHeader);
+        configuration.setAllowCredentials(corsProperties.getAllowCredentials());
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration(corsProperties.getPathPattern(), configuration);
+
+        return source;
     }
 
     @Bean

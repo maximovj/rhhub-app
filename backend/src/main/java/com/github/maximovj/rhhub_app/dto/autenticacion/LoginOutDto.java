@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LoginOutDto {
 
-    @JsonProperty(value = "token")
-    private String token;
+    @JsonProperty(value = "acceso_token")
+    private String accesoToken;
 
     @JsonProperty(value = "renovar_token")
     private String renovarToken;
@@ -23,8 +23,8 @@ public class LoginOutDto {
     private String tipoToken;
     
     // Constructor personalizado adicional
-    public LoginOutDto(String token, String renovarToken) {
-        this.token = token;
+    public LoginOutDto(String accesoToken, String renovarToken) {
+        this.accesoToken = accesoToken;
         this.renovarToken = renovarToken;
         this.tipoToken = "Bearer";
     }
