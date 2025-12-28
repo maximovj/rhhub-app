@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -88,17 +89,33 @@ public class AutenticacionController {
 
     @PostMapping("/validate")
     public ResponseEntity<Boolean> validarToken(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            try {
-                String nombreUsuario = servicioJwt.extraerNombreUsuario(token);
-                UserDetails detallesUsuario = servicioDetallesUsuario.loadUserByUsername(nombreUsuario);
-                return ResponseEntity.ok(servicioJwt.esTokenValido(token, detallesUsuario));
-            } catch (Exception e) {
-                return ResponseEntity.ok(false);
-            }
+        // Verificar que el header existe y tiene el prefijo Bearer
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(400).body(false); // Bad Request si no viene el header correcto
         }
-        return ResponseEntity.ok(false);
+
+        String token = authHeader.substring(7);
+
+        try {
+            // Extraer el usuario desde el JWT
+            String nombreUsuario = servicioJwt.extraerNombreUsuario(token);
+
+            // Cargar detalles del usuario
+            UserDetails detallesUsuario = servicioDetallesUsuario.loadUserByUsername(nombreUsuario);
+
+            // Validar token
+            boolean esValido = servicioJwt.esTokenValido(token, detallesUsuario);
+
+            if (esValido) {
+                return ResponseEntity.ok(true);
+            } else {
+                return ResponseEntity.status(401).body(false); // Unauthorized si el token es inválido
+            }
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(404).body(false); // Usuario no encontrado
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(false); // Cualquier otra excepción -> Unauthorized
+        }
     }
 
     // Logout global
