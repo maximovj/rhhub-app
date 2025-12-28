@@ -1,20 +1,36 @@
+<script setup>
+import { storeToRefs } from "pinia";
+import { useAlertStore } from "@/common/stores/alertStore";
+
+const alert = useAlertStore();
+const {
+  visible,
+  title,
+  message,
+  dark,
+  type,
+  promptValue,
+  promptPlaceholder,
+  confirmButtons
+} = storeToRefs(alert);
+</script>
+
 <template>
-  <div v-if="visible" class="custom-modal" :class="{ dark: isDark }">
+  <div v-if="visible" class="custom-modal" :class="{ dark }">
     <div class="custom-modal__panel">
 
       <!-- HEADER -->
       <div class="custom-modal__header">
         <h5 class="custom-modal__title">{{ title }}</h5>
-        <button class="custom-modal__close" @click="cancel()">×</button>
+        <button class="custom-modal__close" @click="alert.cancel()">×</button>
       </div>
 
       <!-- BODY -->
       <div class="custom-modal-body">
         <p class="modal-dup__single">{{ message }}</p>
 
-        <!-- Prompt input -->
-        <input 
-          v-if="isPrompt"
+        <input
+          v-if="type === 'prompt'"
           v-model="promptValue"
           class="prompt-input"
           type="text"
@@ -24,146 +40,57 @@
 
       <!-- FOOTER -->
       <div class="custom-modal__footer">
-        <!-- ALERT -->
-        <button v-if="isAlert" class="btn-ok p-ripple" @click="resolve(true)">ACEPTAR</button>
 
-        <!-- CONFIRM: sí / no / cancelar -->
-        <template v-if="isConfirm">
-          <button 
+        <!-- ALERT -->
+        <button
+          v-if="type === 'alert'"
+          class="btn-ok"
+          @click="alert.resolve(true)"
+        >
+          ACEPTAR
+        </button>
+
+        <!-- CONFIRM -->
+        <template v-if="type === 'confirm'">
+          <button
             v-if="confirmButtons.visible.cancel"
-            class="btn-outline p-ripple" 
-            @click="resolve('cancel')"
+            class="btn-outline"
+            @click="alert.resolve('cancel')"
           >
             {{ confirmButtons.cancel }}
           </button>
 
-          <button 
+          <button
             v-if="confirmButtons.visible.no"
-            class="btn-outline p-ripple" 
-            @click="resolve('no')"
+            class="btn-outline"
+            @click="alert.resolve('no')"
           >
             {{ confirmButtons.no }}
           </button>
 
-          <button 
+          <button
             v-if="confirmButtons.visible.yes"
-            class="btn-ok p-ripple" 
-            @click="resolve('yes')"
+            class="btn-ok"
+            @click="alert.resolve('yes')"
           >
             {{ confirmButtons.yes }}
           </button>
         </template>
 
         <!-- PROMPT -->
-        <template v-if="isPrompt">
-          <button class="btn-outline p-ripple" @click="resolve(null)">CANCELAR</button>
-          <button class="btn-ok p-ripple" @click="resolve(promptValue)">ACEPTAR</button>
+        <template v-if="type === 'prompt'">
+          <button class="btn-outline" @click="alert.resolve(null)">
+            CANCELAR
+          </button>
+          <button class="btn-ok" @click="alert.resolve(promptValue)">
+            ACEPTAR
+          </button>
         </template>
-      </div>
 
+      </div>
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      visible: false,
-      title: "",
-      message: "",
-      isDark: false,
-      resolver: null,
-      
-      // Control de tipo
-      isAlert: false,
-      isConfirm: false,
-      isPrompt: false,
-
-      // Prompt
-      promptValue: "",
-      promptPlaceholder: "",
-
-      // Confirm buttons
-      confirmButtons: {
-        yes: "SI",
-        no: "NO",
-        cancel: "CANCELAR"
-      }
-    };
-  },
-  methods: {
-    // === COMMON OPEN ===
-    openBase(config) {
-      this.visible = true;
-      this.title = config.title || "";
-      this.message = config.message || "";
-      this.isDark = config.dark || false;
-
-      return new Promise(resolve => {
-        this.resolver = resolve;
-      });
-    },
-
-    // === ALERT ===
-    alert({ title = "Alerta", message, dark = false }) {
-      this.isAlert = true;
-      this.isConfirm = false;
-      this.isPrompt = false;
-      return this.openBase({ title, message, dark });
-    },
-
-    // === CONFIRM ===
-    confirm({ title = "Confirmación", message, dark = false, buttons = {} }) {
-      this.isAlert = false;
-      this.isConfirm = true;
-      this.isPrompt = false;
-
-      const visibles = buttons.visible || ["yes", "no", "cancel"];
-
-      this.confirmButtons = {
-        yes: buttons.yes || "SI",
-        no: buttons.no || "NO",
-        cancel: buttons.cancel || "CANCELAR",
-        visible: {
-          yes: visibles.includes("yes"),
-          no: visibles.includes("no"),
-          cancel: visibles.includes("cancel")
-        }
-      };
-
-      return this.openBase({ title, message, dark });
-    },
-
-    // === PROMPT ===
-    prompt({ title = "INGRESAR VALOR", message, placeholder = "", dark = false }) {
-      this.isAlert = false;
-      this.isConfirm = false;
-      this.isPrompt = true;
-
-      this.promptValue = "";
-      this.promptPlaceholder = placeholder;
-
-      return this.openBase({ title, message, dark });
-    },
-
-    // === CLOSE ===
-    resolve(value) {
-      this.visible = false;
-      if (this.resolver) {
-        this.resolver(value);
-        this.resolver = null;
-      }
-    },
-
-    cancel() {
-      if (this.isConfirm) this.resolve(false);
-      else if (this.isPrompt) this.resolve(null);
-      else this.resolve(true);
-    }
-  }
-};
-</script>
 
 <style scoped>
 /* ===============================

@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/common/stores/authStore'
 
 export default {
   data() {

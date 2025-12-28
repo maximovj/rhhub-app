@@ -1,8 +1,17 @@
+<script setup>
+import AlertCustom from "@/common/components/AlertCustom.vue";
+import { useUiStore } from "@/common/stores/uiStore";
+
+const ui = useUiStore();
+</script>
+
 <template>
   <router-view />
-  
-  <AlertCustom ref="alertRef" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9999]" />
 
+  <!-- Alerta global (controlada por alertStore) -->
+  <AlertCustom class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9999]" />
+
+  <!-- Loading global -->
   <div
     v-if="ui.loading"
     class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9999] grid place-items-center"
@@ -18,20 +27,4 @@
       </span>
     </div>
   </div>
-
 </template>
-
-<script>
-import { useUiStore } from "@/stores/ui";
-
-export default {
-  components: { },
-  setup() {
-    const ui = useUiStore();
-    return { ui };
-  },
-  mounted() {
-    window.$alert = this.$refs.alertRef;
-  }
-};
-</script>

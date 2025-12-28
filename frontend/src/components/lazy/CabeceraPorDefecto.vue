@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@/common/stores/authStore';
+import { useAlertStore } from '@/common/stores/alertStore';
 
 // Referencias computadas
 const route = useRoute();
@@ -13,7 +14,8 @@ const isActive = (path) => {
 }
 
 const salir =  async () =>  { 
-    const desicion = await window.$alert.confirm({ 
+    const alert = useAlertStore();
+    const desicion = await alert.confirm({ 
     message: '¿Seguro que deseas salir?',
     buttons: {visible: ["yes", "cancel"] } 
     });

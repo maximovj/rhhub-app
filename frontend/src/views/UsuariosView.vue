@@ -38,7 +38,8 @@
 </template>
 
 <script>
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@/common/stores/authStore';
+import { useAlertStore } from '@/common/stores/alertStore';
 
 export default {
   // Definir propiedades
@@ -63,21 +64,6 @@ export default {
 
   // Definir métodos
   methods: {
-    isActive(path) {
-      return this.route.path.startsWith(path) ? 'p-button-primary' : ''
-    },
-    async salir() { 
-      const desicion = await window.$alert.confirm({ 
-        message: '¿Seguro que deseas salir?',
-        buttons: {visible: ["yes", "cancel"] } 
-      });
-
-      if(desicion == 'yes') {
-        const auth = useAuthStore();
-        auth.logout();
-        window.location.href = "/";
-      }
-    },
     async cargarUsuarios() {
       try {
 

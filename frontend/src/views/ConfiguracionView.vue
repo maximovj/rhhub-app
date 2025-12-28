@@ -124,7 +124,8 @@
 </template>
 
 <script>
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@/common/stores/authStore';
+import { useAlertStore } from '@/common/stores/alertStore';
 
 export default {
   data() {
@@ -134,7 +135,8 @@ export default {
   },
   methods: {
     async salir() { 
-      const desicion = await window.$alert.confirm({ 
+      const alert = useAlertStore();
+      const desicion = await alert.confirm({ 
         message: '¿Seguro que deseas salir?',
         buttons: {visible: ["yes", "cancel"] } 
       });
