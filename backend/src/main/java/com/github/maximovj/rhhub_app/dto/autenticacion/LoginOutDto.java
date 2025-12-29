@@ -19,10 +19,20 @@ public class LoginOutDto {
     @JsonProperty(value = "tipo_token")
     private String tipoToken;
     
+    @JsonProperty(value = "info_usuario")
+    private InfoUsuarioOutDto infoUsuario;
+    
     // Constructor personalizado adicional
     public LoginOutDto(String accesoToken) {
         this.accesoToken = accesoToken;
         this.tipoToken = "Bearer";
+    }
+
+    // Constructor personalizado adicional
+    public LoginOutDto(String accesoToken, InfoUsuarioOutDto usuarioDto) {
+        this.accesoToken = accesoToken;
+        this.tipoToken = "Bearer";
+        this.infoUsuario = usuarioDto;
     }
     
 }

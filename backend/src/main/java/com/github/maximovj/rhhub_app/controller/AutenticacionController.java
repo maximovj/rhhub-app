@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.maximovj.rhhub_app.config.security.ServicioJwt;
 import com.github.maximovj.rhhub_app.dto.autenticacion.LoginInDto;
 import com.github.maximovj.rhhub_app.dto.autenticacion.LoginOutDto;
+import com.github.maximovj.rhhub_app.dto.autenticacion.InfoUsuarioOutDto;
 import com.github.maximovj.rhhub_app.dto.response.ApiResponse;
 import com.github.maximovj.rhhub_app.entity.RenovarTokensEntity;
 import com.github.maximovj.rhhub_app.entity.UsuarioEntity;
@@ -65,7 +66,7 @@ public class AutenticacionController {
         }
 
         // Buscar usuario
-        Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findByUsuario(request.getUsuario());
+        Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findByUsuarioWithDetails(request.getUsuario());
         if (usuarioOpt.isEmpty()) {
             return ApiResponse.notFound("Usuario no encontrado", null);
         }
@@ -83,7 +84,15 @@ public class AutenticacionController {
         // Guardar cookie HttpOnly
         response.addCookie(renovarTokensService.getCookie(refreshToken));
 
-        return ApiResponse.ok("Acceso exitosa", new LoginOutDto(accessToken));
+        InfoUsuarioOutDto usuarioDto = InfoUsuarioOutDto.builder()
+        .grupo(usuario.getGrupo().getNombre())
+        .permisos(usuario.getGrupo().getPermisos())
+        .rol(usuario.getGrupo().getRol().getRolNombre())
+        .usuario(usuario.getUsuario())
+        .usuarioId(usuario.getUsuarioId())
+        .build();
+
+        return ApiResponse.ok("Acceso exitosa", new LoginOutDto(accessToken, usuarioDto));
     }
 
 
@@ -106,18 +115,32 @@ public class AutenticacionController {
             return ApiResponse.unauthorized("renovar token expirado o revocado", null);
         }
 
+        // Buscar usuario
+        Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findByUsuarioWithDetails(refreshToken.getUsuario().getUsuario());
+        if (usuarioOpt.isEmpty()) {
+            return ApiResponse.notFound("Usuario no encontrado", null);
+        }
+        UsuarioEntity usuario = usuarioOpt.get();
+
         // Revocar antiguo token
         renovarTokensService.revoke(refreshToken);
 
         // Generar access token
-        String accessToken = servicioJwt.generarToken(refreshToken.getUsuario().getUsuario());
+        String accessToken = servicioJwt.generarToken(usuario.getUsuario());
 
         // Crear refresh token nuevo y cookie
-        RenovarTokensEntity refreshTokenNuevo = renovarTokensService.createRefreshToken(refreshToken.getUsuario(),
-                refreshToken.isRecuerdame());
+        RenovarTokensEntity refreshTokenNuevo = renovarTokensService.createRefreshToken(usuario, refreshToken.isRecuerdame());
         response.addCookie(renovarTokensService.getCookie(refreshTokenNuevo));
 
-        return ApiResponse.ok("renovar token generada correctamente", new LoginOutDto(accessToken));
+        InfoUsuarioOutDto usuarioDto = InfoUsuarioOutDto.builder()
+        .grupo(usuario.getGrupo().getNombre())
+        .permisos(usuario.getGrupo().getPermisos())
+        .rol(usuario.getGrupo().getRol().getRolNombre())
+        .usuario(usuario.getUsuario())
+        .usuarioId(usuario.getUsuarioId())
+        .build();
+
+        return ApiResponse.ok("renovar token generada correctamente", new LoginOutDto(accessToken, usuarioDto));
     }
 
 
