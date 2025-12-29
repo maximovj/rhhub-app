@@ -13,6 +13,7 @@ public class ApiResponseError <T> extends ApiResponseDetailsDto<T> {
     ) {
         super(
             status.value(),
+            status.getReasonPhrase(),
             "error",
             false,
             null,

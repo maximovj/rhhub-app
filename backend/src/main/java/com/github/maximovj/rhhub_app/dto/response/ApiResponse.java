@@ -36,6 +36,16 @@ public class ApiResponse<T> {
     }
 
     // !! Respuestas Especificas // Error
+    public static ResponseEntity<?> unauthorized(String messageError, List<ApiErrorDto> errors) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        return ResponseEntity.status(status.value()).body(new ApiResponseError<Object>(status, messageError, errors));
+    }
+
+    public static ResponseEntity<?> forbidden(String messageError, List<ApiErrorDto> errors) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return ResponseEntity.status(status.value()).body(new ApiResponseError<Object>(status, messageError, errors));
+    }
+
     public static ResponseEntity<?> badRequest(String messageError, List<ApiErrorDto> errors) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.badRequest().body(new ApiResponseError<Object>(status, messageError, errors));

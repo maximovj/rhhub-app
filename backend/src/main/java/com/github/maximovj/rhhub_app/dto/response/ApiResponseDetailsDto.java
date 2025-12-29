@@ -3,6 +3,8 @@ package com.github.maximovj.rhhub_app.dto.response;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,19 +16,21 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ApiResponseDetailsDto<T> {
 
-    private int code; // 200, 201, 400, 404, etc.
+    private int codigo; // 200, 201, 400, 404, etc.
 
-    private String status; // success, error
+    private String razon;
+
+    private String estado; // success, error
     
-    private Boolean success; // true, false
+    private Boolean exitosa; // true, false
 
-    private String message;
+    private String mensaje;
 
-    private T context;
+    private T contenido;
 
-    private String messageError;
+    private String error;
 
-    private List<ApiErrorDto> errors;
+    private List<ApiErrorDto> errores;
 
     private Map<String, Object> metadata;
 

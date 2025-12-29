@@ -11,6 +11,7 @@ public class ApiResponseSuccess<T> extends ApiResponseDetailsDto<T> {
     ) {
         super(
             status.value(),
+            status.getReasonPhrase(),
             "success",
             true,
             message,
