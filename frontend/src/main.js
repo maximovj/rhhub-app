@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 
+import { useAuthStore } from './common/stores/authStore'
+
 import CommonPlugin from './plugins/common'
 
 import PiniaPlugin from './plugins/pinia'
@@ -34,3 +36,6 @@ app.use(PrimeVue, {
 app.use(CommonPlugin)
 
 app.mount('#app')
+
+const auth = useAuthStore();
+await auth.init();

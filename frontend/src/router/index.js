@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/common/stores/authStore'
+import { useSettingsStore } from '@/common/stores/settingsStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,15 +34,14 @@ const router = createRouter({
 
 // Guard para rutas protegidas usando Pinia
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
-  const isAuthenticated = authStore.isLoggedIn
+  const settings = useSettingsStore()
   
   // Si la ruta requiere autenticación y no está logueado
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAuth && !settings.estaLogueado) {
     next({name: 'acceder'})
   }
   // Si la ruta es para invitados (login) y ya está autenticado
-  else if (to.meta.requiresGuest && isAuthenticated) {
+  else if (to.meta.requiresGuest && settings.estaLogueado) {
     next({name: 'panel'})
   }
   // En cualquier otro caso, permitir navegación

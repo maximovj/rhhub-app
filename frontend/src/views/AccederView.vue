@@ -32,7 +32,7 @@
         <!-- Recordar y Olvidé -->
         <div class="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
           <label class="flex items-center gap-2">
-            <input type="checkbox" v-model="remember" class="accent-blue-500" />
+            <input type="checkbox" v-model="recuerdame" class="accent-blue-500" />
             Recordarme
           </label>
           <a href="#" class="hover:underline">¿Olvidaste tu contraseña?</a>
@@ -57,7 +57,9 @@
 </template>
 
 <script>
-import { useAuthStore } from '@/common/stores/authStore'
+import { useAuthStore } from '@/common/stores/authStore';
+import autenticacionService from '@/common/services/autenticacion.service';
+import { useSettingsStore } from '@/common/stores/settingsStore';
 
 export default {
   data() {
@@ -66,7 +68,7 @@ export default {
       metaTitle: 'Inciar Sesión',
       usuario: '',
       contrasena: '',
-      remember: false,
+      recuerdame: false,
     };
   },
 
@@ -74,32 +76,23 @@ export default {
     async login() {
       this.cargando = true;
 
-      const data = await this.$utils.apiExecutarV1({
-        tryFetch:{ 
-          data: { size: 10, page: 0 }
-        },
-        finallyFn: () => {
-          this.cargando = false;
-        },
-      });
-      console.log("⚠️", "ApiExcete", "data", data);
+      await autenticacionService.login(
+        this.usuario,
+        this.contrasena,
+        this.recuerdame,
+      );
 
-      // Aquí pondrías la lógica de autenticación
-      console.log('⚠️','Usuario:', this.usuario);
-      console.log('⚠️','Contraseña:', this.contrasena);
-      console.log('⚠️','Remember:', this.remember);
+      const settings = useSettingsStore();
+      console.log("settings.$state",settings.$state);
+      console.log("settings.estaLogueado", settings.estaLogueado);
 
-      const authStore = useAuthStore();
-      authStore.login({
-        usuario: this.usuario, 
-        password: this.contrasena,
-        remember: this.remember,
-      });
-      
-      if (authStore.isLoggedIn) {
+      if(settings.estaLogueado) {
         // Sin recargar la pagina
         this.$router.push('/panel');
+        console.log(this.$router);
       }
+
+      this.cargando = false;
     }
   },
 
