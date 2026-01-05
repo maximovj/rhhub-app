@@ -51,18 +51,23 @@ public class RenovarTokensService {
     }
 
     public ResponseCookie getCookie(RenovarTokensEntity token) {
-        return ResponseCookie.from(cookieRefreshTokenProperties.getName(), token.getToken())
-                .httpOnly(cookieRefreshTokenProperties.isHttpOnly())
-                .secure(cookieRefreshTokenProperties.isSecure())
-                .path(cookieRefreshTokenProperties.getPath())
-                .sameSite(cookieRefreshTokenProperties.getSameSite())
-                .maxAge(
-                    token.isRecuerdame()
-                        ? cookieRefreshTokenProperties.getMaxAge()
-                        : jwtProperties.getExpirationTime() // o el tiempo que dure la sesión
-                )
-                // .domain(cookieRefreshTokenProperties.getDomain()) // SI usas dominio
-                .build();
+        ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie
+            .from(cookieRefreshTokenProperties.getName(), token.getToken())
+            .httpOnly(cookieRefreshTokenProperties.isHttpOnly())
+            .secure(cookieRefreshTokenProperties.isSecure())
+            .path(cookieRefreshTokenProperties.getPath())
+            .sameSite(cookieRefreshTokenProperties.getSameSite());
+            // .domain(cookieRefreshTokenProperties.getDomain()) // SI usas dominio
+        
+        // IMPORTANTE: SOLO establece maxAge si es "recuérdame"
+        if (token.isRecuerdame()) {
+            cookieBuilder.maxAge(cookieRefreshTokenProperties.getMaxAge());
+        } else {
+            cookieBuilder.maxAge(-1);
+        }
+
+        // Si NO es "recuérdame", NO establecemos maxAge = cookie de sesión
+        return cookieBuilder.build();
     }
 
     public ResponseCookie removeCookie() {
