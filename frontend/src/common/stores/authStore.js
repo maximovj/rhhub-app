@@ -3,6 +3,8 @@ import { defineStore } from 'pinia'
 import { useSettingsStore } from './settingsStore';
 import { useAlertStore } from './alertStore';
 import autenticacionService from '../services/autenticacion.service';
+import { scopedLogger } from '../utils/loggerUtils';
+const logger = scopedLogger("authStore.js");
 
 export const useAuthStore = defineStore('auth', { 
   state: () => ({
@@ -31,6 +33,8 @@ export const useAuthStore = defineStore('auth', {
       try {
         if(settings.recuerdame || settings.usuario) {
           const renovarToken = await autenticacionService.refresh();
+          logger.info("init", "renovarToken", renovarToken);
+          
           
           if(renovarToken.status == 200) {
             const { contenido } = renovarToken.data;

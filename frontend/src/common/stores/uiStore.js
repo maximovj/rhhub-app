@@ -7,6 +7,10 @@ export const useUiStore = defineStore('ui', {
     loadingCount: 0 // muy importante para múltiples requests
   }),
   actions: {
+    startLoading() {
+      this.loadingCount++
+      this.loading = true
+    },
     showLoading() {
       this.loadingCount++
       this.loading = true

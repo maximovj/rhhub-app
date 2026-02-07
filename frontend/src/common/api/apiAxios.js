@@ -12,7 +12,8 @@ const api = axios.create({
 
 // ---------------- REQUEST ----------------
 // 👉 Access token automático
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(async (config) => {
+  await new Promise(resolve => setTimeout(resolve, 2400));
   const auth = useAuthStore()
   if (auth.acceso_token) {
     config.headers.Authorization = `Bearer ${auth.acceso_token}`
@@ -58,6 +59,12 @@ api.interceptors.response.use(
           queue.forEach(cb => cb(acceso_token))
           queue = []
 
+          // Redirigir hacia login
+          if(!acceso_token) {
+            const router = useRouter();
+            router.replace({ name: 'acceder' });
+          }
+
           return api(original)
         }
       } catch (e) {
@@ -65,8 +72,9 @@ api.interceptors.response.use(
         const auth = useAuthStore();
         await auth.logout();
 
+        // Redirigir hacia login
         const router = useRouter();
-        router.push('/acceder');
+        router.replace({ name: 'acceder' });
       } finally {
         refreshing = false
       }

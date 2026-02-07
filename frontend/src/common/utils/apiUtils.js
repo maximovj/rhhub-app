@@ -21,10 +21,6 @@ export async function apiExecutar({
 
   ui.startLoading();
 
-  await new Promise((resolve, reject) => { 
-          setTimeout(() => { resolve({status: 'OK'}) }, 5500);
-        }).then(() => {});
-
   try {
     const response = await axios({
       method,

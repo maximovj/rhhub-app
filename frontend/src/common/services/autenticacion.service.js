@@ -4,6 +4,8 @@ import { useSettingsStore } from '@/common/stores/settingsStore'
 import { useUiStore } from '../stores/uiStore'
 import { useAlertStore } from '../stores/alertStore'
 import { useAuthStore } from '../stores/authStore'
+import { scopedLogger } from '../utils/loggerUtils'
+const logger = scopedLogger("autentication.service.js");
 
 class AutenticacionService extends BaseService {
   constructor() {
@@ -52,8 +54,9 @@ class AutenticacionService extends BaseService {
   async refresh() {
     const ui = useUiStore();
     ui.loading = true;
+    logger.info("refresh", "Ejecutando...");
 
-    return this.custom('post', '/refresh')
+    return await this.custom('post', '/refresh')
     .then(res => {
         const auth = useAuthStore();
         auth.loguearse(
