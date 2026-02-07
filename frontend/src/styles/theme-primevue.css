@@ -127,3 +127,39 @@
   opacity: 0;
   transform: translateY(-10px);
 }
+
+/* ===============================
+   DIALOG HEADER ESTILO CONFIRM
+=============================== */
+
+.p-dialog {
+  border: none !important;
+}
+
+.p-dialog .p-dialog-header {
+  background: linear-gradient(
+    135deg,
+    var(--p-primary-400),
+    var(--p-primary-600)
+  );
+  color: #111;
+  font-weight: 600;
+  padding: 1rem 1.25rem;
+  border-radius: 12px 12px 0 0;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Título */
+.p-dialog .p-dialog-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Botón cerrar */
+.p-dialog .p-dialog-header-close {
+  color: #111;
+}
+
+.p-dialog .p-dialog-header-close:hover {
+  background: rgba(0, 0, 0, 0.08);
+}

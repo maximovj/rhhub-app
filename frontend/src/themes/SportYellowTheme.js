@@ -56,5 +56,37 @@ export default definePreset(Aura, {
         },
       }
     }
-  }
+  },
+
+  /*
+  components: {
+    dialog: {
+      extend: {
+        component: {
+          border: '0px',
+        },
+        header: {
+          background: 'linear-gradient(135deg, {primary.400}, {primary.600})',
+          color: '{surface.0}',
+          fontWeight: '600',
+          borderRadius: '0.6rem 0.6rem 0 0',
+          padding: '12px',
+        }
+      }
+    }
+  },
+  css: ({ dt }) => `
+    .p-dialog {
+      border: ${dt('dialog.component.border')};
+    }
+    .p-dialog .p-dialog-header {
+      background: ${dt('dialog.header.background')};
+      color: ${dt('dialog.header.color')};
+      font-weight: ${dt('dialog.header.fontWeight')};
+      border-radius: ${dt('dialog.header.borderRadius')};
+      padding: ${dt('dialog.header.padding')};
+    }
+    `
+  */
+  
 })
