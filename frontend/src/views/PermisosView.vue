@@ -279,7 +279,6 @@
                 :options="[2, 10, 50, 100]" 
                 v-model="rowsDataTable" 
                 @change="rowChangeCallback(rowsDataTable)"
-                class="w-20"
                 style="height: 36px;"
               />
             </div>
@@ -384,7 +383,7 @@ export default {
     fechaInicio.setFullYear(fechaFin.getFullYear() - 10);
 
     return {
-      rowsDataTable: 2,
+      rowsDataTable: 10,
       permisos: [
         { id: 1, nombre: 'Ver Usuarios', modulo: 'Usuarios', estado: 'Activo', fechaCreacion: new Date('2024-01-10') },
         { id: 2, nombre: 'Crear Usuario', modulo: 'Usuarios', estado: 'Activo', fechaCreacion: new Date('2024-01-15') },
