@@ -1,36 +1,16 @@
 <template>
   <PlantillaBase>
   <div class="card">
+
     <!-- Header -->
-    <header class="flex items-center justify-between mb-4">
-      <!-- Título y subtítulo -->
-      <div class="space-y-1">
-          <h1 class="text-2xl font-semibold text-gray-800">
-          Gestión de Permisos
-          </h1>
-          <p class="text-sm text-gray-500">
-          Resumen general de la información
-          </p>
-      </div>
-
-      <!-- Botonera + menú popup -->
-      <div class="flex items-center gap-2">
-
-          <!-- Botón acción -->
-          <Button
-          label="Nuevo"
-          icon="pi pi-plus"
-          class="p-button-sm"
-          />
-
-          <!-- Botón icono -->
-          <Button
-          icon="pi pi-refresh"
-          class="p-button-sm p-button-outlined"
-          aria-label="Actualizar"
-          />
-
-          <!-- Botón menú -->
+    <CustomHeaderPagina
+      title="Gestión de Permisos"
+      subtitle="Resumen general de la información"
+    >
+      <template #actions>
+        <Button label="Nuevo" icon="pi pi-plus" />
+        <Button icon="pi pi-refresh" outlined />
+        <!-- Botón menú -->
           <Button
           icon="pi pi-ellipsis-v"
           class="p-button-sm p-button-text"
@@ -46,65 +26,17 @@
           :model="menuItems"
           popup
           />
-      </div>
-    </header>
+      </template>
+    </CustomHeaderPagina>
 
     <!-- 🔎 Barra de filtros - Expandible -->
-    <Card class="mb-4">
+    <CustomCardFiltros v-model="filtersVisible" :filters="activeFilters">
       <template #title>
-        <div 
-          class="flex items-center justify-between cursor-pointer"
-          @click="filtersVisible = !filtersVisible"
-        >
-          <div class="flex items-center gap-2">
-            <i 
-              class="pi" 
-              :class="[filtersVisible ? 'pi-chevron-down' : 'pi-chevron-right']"
-            ></i>
-            <i class="pi pi-filter text-primary"></i>
-            <h4 class="text-sm font-medium">Filtros de búsqueda</h4>
-          </div>
-          
-          <!-- Resumen visual de filtros activos -->
-          <div class="flex items-center gap-2">
-            <div class="hidden md:flex gap-1">
-              <Tag 
-                v-if="searchForm.nombre" 
-                :value="'Nombre: ' + searchForm.nombre" 
-                severity="info" 
-                rounded
-                class="text-xs"
-              />
-              <Tag 
-                v-if="searchForm.modulo" 
-                :value="'Módulo: ' + searchForm.modulo" 
-                severity="info" 
-                rounded
-                class="text-xs"
-              />
-              <Tag 
-                v-if="searchForm.estado" 
-                :value="'Estado: ' + getEstadoLabel(searchForm.estado)" 
-                :severity="getEstadoSeverity(searchForm.estado)" 
-                rounded
-                class="text-xs"
-              />
-              <Tag 
-                v-if="searchForm.fechaCreacion && searchForm.fechaCreacion.length > 0" 
-                :value="'Fecha de creación: ' + formatDate(searchForm.fechaCreacion[0]) + ' - ' + formatDate(searchForm.fechaCreacion[1])" 
-                severity="info" 
-                rounded
-                class="text-xs"
-              />
-            </div>
-            
-          </div>
-        </div>
+        <i class="pi pi-filter  text-primary" />
+        <h4 class="text-sm font-medium">Filtros de búsqueda</h4>
       </template>
 
-      <template #content>
-        <Transition name="fade">
-          <form @submit.prevent="aplicarBusqueda">
+      <form @submit.prevent="aplicarBusqueda">
           <div v-if="filtersVisible" class="flex flex-col gap-4">
             <!-- Filtros -->
             
@@ -173,29 +105,7 @@
               />
 
               <!-- Badges de filtros activos (interactivos) -->
-              <div class="flex gap-1 flex-wrap">
-                <Chip
-                  v-if="searchForm.nombre"
-                  :label="searchForm.nombre"
-                  icon="pi pi-search"
-                  removable
-                  @remove="searchForm.nombre = ''"
-                />
-                <Chip
-                  v-if="searchForm.modulo"
-                  :label="searchForm.modulo"
-                  icon="pi pi-box"
-                  removable
-                  @remove="searchForm.modulo = ''"
-                />
-                <Chip
-                  v-if="searchForm.estado"
-                  :label="getEstadoLabel(searchForm.estado)"
-                  icon="pi pi-tag"
-                  removable
-                  @remove="searchForm.estado = null"
-                />
-              </div>
+              <CustomFiltrosActivos :filters="activeFilters" />
 
               <div class="flex gap-2">
                 <Button
@@ -208,23 +118,14 @@
               </div>
             </div>
           </div>
-        </form>
-        </Transition>
-      </template>
-    </Card> 
+      </form>
+    </CustomCardFiltros> 
 
     <!-- 📋 Tabla -->
-    <DataTable
-      v-model:filters="filters"
+    <GenericDataTable
       :value="permisos"
-      paginator
-      :rows="rowsDataTable"
-      :rowsPerPageOptions="[2, 10, 50, 100]"
-      removableSort
-      stripedRows
-      showGridlines
-      paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-      currentPageReportTemplate="Mostrando {first} / {last} registros de {totalRecords} registros"
+      :filters="filters"
+      v-model:rows="rows"
     >
       <Column field="id" header="ID" sortable style="width: 80px" />
       <Column field="nombre" header="Nombre" sortable />
@@ -242,7 +143,6 @@
           {{ formatDate(data.fechaCreacion) }}
         </template>
       </Column>
-
       <Column header="Acciones" style="width: 180px">
         <template #body="{ data }">
           <div class="flex gap-2">
@@ -266,89 +166,8 @@
           </div>
         </template>
       </Column>
-
-
-    <template #paginatorcontainer="{ first, last, page, pageCount, prevPageCallback, nextPageCallback, rowChangeCallback, totalRecords }">
-        <div class="flex items-stretch divide-x divide-gray-200 w-full overflow-auto">
-          <!-- Dropdown -->
-          <div class="flex items-center gap-3 px-4">
-            <i class="pi pi-list text-gray-400 text-sm"></i>
-            <div>
-              <span class="text-xs text-gray-400 block mb-1">FILAS</span>
-              <Dropdown 
-                :options="[2, 10, 50, 100]" 
-                v-model="rowsDataTable" 
-                @change="rowChangeCallback(rowsDataTable)"
-                style="height: 36px;"
-              />
-            </div>
-          </div>
-          
-          <!-- Progreso -->
-          <div class="hidden md:flex items-center justify-start gap-4 px-4 flex-1">
-            <i class="pi pi-chart-line text-gray-400 text-sm"></i>
-            <div class="w-full">
-              <span class="text-xs text-gray-400 block mb-1">PROGRESO</span>
-              <div class="flex items-center gap-3">
-                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div 
-                    class="h-full bg-blue-600 transition-all"
-                    :style="{ width: `${((page + 1) / pageCount) * 100}%` }"
-                  ></div>
-                </div>
-                <span class="text-sm font-medium text-gray-700">{{ Math.round(((page + 1) / pageCount) * 100) }}%</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Info registros -->
-          <div class="hidden md:flex items-center gap-3 px-4">
-            <i class="pi pi-database text-gray-400 text-sm"></i>
-            <div>
-              <span class="text-xs text-gray-400 block mb-1">REGISTROS</span>
-              <div class="text-sm">
-                <span class="font-medium text-gray-900">{{ first }}</span>
-                <span class="text-gray-400 mx-1">–</span>
-                <span class="font-medium text-gray-900">{{ last }}</span>
-                <span class="text-gray-300 mx-2">/</span>
-                <span class="font-medium text-gray-900">{{ totalRecords }}</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Navegación -->
-          <div class="flex items-center px-4 md:gap-3">
-            <i class="pi pi-file text-gray-400 text-sm"></i>
-            <div>
-              <span class="text-xs text-gray-400 block mb-1">PÁGINA</span>
-              <div class="flex items-center md:gap-2">
-                <Button 
-                  icon="pi pi-chevron-left" 
-                  severity="secondary" 
-                  text
-                  @click="prevPageCallback" 
-                  :disabled="page === 0"
-                  class="w-7 h-7"
-                  size="small"
-                />
-                <span class="text-sm font-medium text-gray-700 min-w-[5px] text-center">{{ page + 1 }}</span>
-                <Button 
-                  icon="pi pi-chevron-right" 
-                  severity="secondary" 
-                  text
-                  @click="nextPageCallback" 
-                  :disabled="page === pageCount - 1"
-                  class="w-7 h-7"
-                  size="small"
-                />
-                <span class="text-sm text-gray-500 ml-1">/{{ pageCount }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-    </template>
-      
-    </DataTable>
+    </GenericDataTable>
+    
   </div>
   </PlantillaBase>
 </template>
@@ -429,6 +248,43 @@ export default {
       ]
     }
   },
+
+  computed: {
+  activeFilters() {
+    return [
+      this.searchForm.nombre && {
+        icon: 'pi pi-search',
+        key: 'nombre',
+        label: 'Nombre',
+        value: this.searchForm.nombre,
+        onRemove: () => this.searchForm.nombre = null
+      },
+      this.searchForm.modulo && {
+        icon: 'pi pi-box',
+        key: 'modulo',
+        label: 'Módulo',
+        value: this.searchForm.modulo,
+        onRemove: () => this.searchForm.modulo = null
+      },
+      this.searchForm.estado && {
+        icon: 'pi pi-tag',
+        key: 'estado',
+        label: 'Estado',
+        value: this.getEstadoLabel(this.searchForm.estado),
+        onRemove: () => this.searchForm.estado = null
+      },
+      this.searchForm.fechaCreacion && 
+      this.searchForm.fechaCreacion[0] && 
+      this.searchForm.fechaCreacion[1] && {
+        icon: 'pi pi-calendar',
+        key: 'fechaCreacion',
+        label: 'Fecha creación',
+        value: `${this.formatDate(this.searchForm.fechaCreacion[0])} - ${this.formatDate(this.searchForm.fechaCreacion[1])}`,
+        onRemove: () => this.searchForm.fechaCreacion = [null, null]
+      }
+    ].filter(Boolean)
+  },
+},
 
   methods: {
     toggleMenu(event) {
