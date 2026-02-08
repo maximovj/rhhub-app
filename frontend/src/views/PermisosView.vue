@@ -402,7 +402,7 @@ export default {
         fechaCreacion: [fechaInicio, fechaFin]
       },
 
-      filtersVisible: true,
+      filtersVisible: false,
 
       filters: {
         nombre: { value: null, matchMode: FilterMatchMode.CONTAINS },
