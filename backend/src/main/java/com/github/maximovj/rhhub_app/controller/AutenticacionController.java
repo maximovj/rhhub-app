@@ -23,6 +23,7 @@ import com.github.maximovj.rhhub_app.config.security.ServicioJwt;
 import com.github.maximovj.rhhub_app.config.security.UserDetailsServiceImpl;
 import com.github.maximovj.rhhub_app.dto.autenticacion.LoginInDto;
 import com.github.maximovj.rhhub_app.dto.autenticacion.LoginOutDto;
+import com.github.maximovj.rhhub_app.dto.request.LogoutRequest;
 import com.github.maximovj.rhhub_app.dto.autenticacion.InfoUsuarioOutDto;
 import com.github.maximovj.rhhub_app.dto.response.ApiResponse;
 import com.github.maximovj.rhhub_app.entity.RenovarTokensEntity;
@@ -32,6 +33,7 @@ import com.github.maximovj.rhhub_app.repository.UsuarioRepository;
 import com.github.maximovj.rhhub_app.service.RenovarTokensService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/autenticacion")
@@ -97,6 +99,7 @@ public class AutenticacionController {
         .rol(usuario.getGrupo().getRol().getRolNombre())
         .usuario(usuario.getUsuario())
         .usuarioId(usuario.getUsuarioId())
+        .esAdmin(usuario.getGrupo().getRol().getRolEsAdministrador())
         .recuerdame(refreshToken.isRecuerdame())
         .build();
 
@@ -147,6 +150,7 @@ public class AutenticacionController {
         .rol(usuario.getGrupo().getRol().getRolNombre())
         .usuario(usuario.getUsuario())
         .usuarioId(usuario.getUsuarioId())
+        .esAdmin(usuario.getGrupo().getRol().getRolEsAdministrador())
         .recuerdame(refreshTokenNuevo.isRecuerdame())
         .build();
 
@@ -181,7 +185,8 @@ public class AutenticacionController {
 
     // ---------------- LOGOUT GLOBAL ----------------
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody String usuario, HttpServletResponse response) {
+    public ResponseEntity<?> logout(@RequestBody @Valid LogoutRequest req, HttpServletResponse response) {
+        String usuario =  req.getUsuario();
         logger.info("usuario: {}", usuario);
         // Buscar usuario
         Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findByUsuarioWithDetails(usuario);
