@@ -37,13 +37,14 @@ public class PermisoSeeder implements ApplicationRunner {
 		
         if(this.seederProperties.isEnabled() == false) return;
         
-        this.permisosModuloPermisos();
-        this.permisosModuloUsuarios();
-        this.permisosModuloRoles();
+        this.crearModuloConPermisosCRUD("USUARIOS");
+        this.crearModuloConPermisosCRUD("ROLES");
+        this.crearModuloConPermisosCRUD("GRUPOS");
+        this.crearModuloConPermisosCRUD("PERMISOS");
 	}
 
     @Transactional
-    private void crearUnPermiso(String strPermiso) {
+    private void crearUnPermiso(String strPermiso, String strModulo) {
         try {
             if(!repository.existsByPermisoAccion(strPermiso)) {
                 Optional<UsuarioPermisoEstadoEntity> estado = usuarioPermisoEstadoRepository.findByEstado("ACTIVO");
@@ -52,8 +53,8 @@ public class PermisoSeeder implements ApplicationRunner {
 
                     // Crear el objeto de manera más explícita
                     PermisoEntity permiso = PermisoEntity.builder()
-                    .permisoAccion(strPermiso)  // Esto es un literal, no es null
-                    .permisoModulo("MODULO_USUARIOS")
+                    .permisoAccion(strPermiso)
+                    .permisoModulo(strModulo)
                     .build();
 
                     if(permiso != null) {
@@ -67,42 +68,17 @@ public class PermisoSeeder implements ApplicationRunner {
         }
     }
 
-    private void permisosModuloPermisos() {
+    private void crearModuloConPermisosCRUD(String nombreModulo) {
+        String modulo = "MODULO_" + nombreModulo;
         String[] permisosModuloPermisos = {
-            "VIEW_PERMISOS", 
-            "CREATE_PERMISOS", 
-            "READ_PERMISOS", 
-            "UPDATE_PERMISOS", 
-            "DELETE_PERMISOS"};
+            "VIEW_" + nombreModulo, 
+            "CREATE_" + nombreModulo, 
+            "READ_" + nombreModulo, 
+            "UPDATE_" + nombreModulo, 
+            "DELETE_" + nombreModulo};
 
         for (String string : permisosModuloPermisos) {
-            this.crearUnPermiso(string);
-        }
-    }
-
-    private void permisosModuloUsuarios() {
-        String[] permisosModuloUsuarios = {
-            "VIEW_USUARIOS", 
-            "CREATE_USUARIOS", 
-            "READ_USUARIOS", 
-            "UPDATE_USUARIOS", 
-            "DELETE_USUARIOS"};
-
-        for (String string : permisosModuloUsuarios) {
-            this.crearUnPermiso(string);
-        }
-    }
-
-    private void permisosModuloRoles() {
-        String[] permisosModuloRoles = {
-            "VIEW_ROLES", 
-            "CREATE_ROLES", 
-            "READ_ROLES", 
-            "UPDATE_ROLES", 
-            "DELETE_ROLES"};
-
-        for (String string : permisosModuloRoles) {
-            this.crearUnPermiso(string);
+            this.crearUnPermiso(string, modulo);
         }
     }
 
