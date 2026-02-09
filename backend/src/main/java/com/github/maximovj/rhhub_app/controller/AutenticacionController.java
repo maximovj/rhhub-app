@@ -96,10 +96,10 @@ public class AutenticacionController {
         InfoUsuarioOutDto usuarioDto = InfoUsuarioOutDto.builder()
         .grupo(usuario.getGrupo().getNombre())
         .permisos(usuario.getGrupo().getPermisos())
-        .rol(usuario.getGrupo().getRol().getRolNombre())
+        .rol(usuario.getGrupo().getRol().getNombre())
         .usuario(usuario.getUsuario())
         .usuarioId(usuario.getUsuarioId())
-        .esAdmin(usuario.getGrupo().getRol().getRolEsAdministrador())
+        .esAdmin(usuario.getGrupo().getRol().getEsAdministrador())
         .recuerdame(refreshToken.isRecuerdame())
         .build();
 
@@ -147,10 +147,10 @@ public class AutenticacionController {
         InfoUsuarioOutDto usuarioDto = InfoUsuarioOutDto.builder()
         .grupo(usuario.getGrupo().getNombre())
         .permisos(usuario.getGrupo().getPermisos())
-        .rol(usuario.getGrupo().getRol().getRolNombre())
+        .rol(usuario.getGrupo().getRol().getNombre())
         .usuario(usuario.getUsuario())
         .usuarioId(usuario.getUsuarioId())
-        .esAdmin(usuario.getGrupo().getRol().getRolEsAdministrador())
+        .esAdmin(usuario.getGrupo().getRol().getEsAdministrador())
         .recuerdame(refreshTokenNuevo.isRecuerdame())
         .build();
 

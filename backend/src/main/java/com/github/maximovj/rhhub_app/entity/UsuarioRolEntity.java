@@ -42,18 +42,18 @@ public class UsuarioRolEntity {
     @JsonProperty("rol_id")
     private Long rolId;
 
-    @Column(name = "ROL_NOMBRE", nullable = false, unique = true)
-    @JsonProperty("rol_nombre")
-    private String rolNombre;
+    @Column(name = "NOMBRE", nullable = false, unique = true)
+    @JsonProperty("nombre")
+    private String nombre;
 
-    @Column(name = "ROL_DESCRIPCION", nullable = false, unique = true)
-    @JsonProperty("rol_descripcion")
-    private String rolDescripcion;
+    @Column(name = "DESCRIPCION", nullable = false, unique = true)
+    @JsonProperty("descripcion")
+    private String descripcion;
 
-    @Column(name = "ROL_ES_ADMINISTRADOR", nullable = false, unique = false)
-    @JsonProperty(value = "rol_es_administrador", defaultValue = "false")
+    @Column(name = "ES_ADMINISTRADOR", nullable = false, unique = false)
+    @JsonProperty(value = "es_administrador", defaultValue = "false")
     @Builder.Default
-    private Boolean rolEsAdministrador = false;
+    private Boolean esAdministrador = false;
 
     @Column(name = "ES_ACTIVO", nullable = false, unique = false)
     @JsonProperty(value = "es_activo", defaultValue = "false")

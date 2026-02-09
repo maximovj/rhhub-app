@@ -41,7 +41,7 @@ public class UsuarioRolSeeder implements ApplicationRunner {
         
         if(this.seederProperties.isEnabled() == false) return;
 
-        if (!rolRepository.existsByRolNombre("ROOT")) {
+        if (!rolRepository.existsByNombre("ROOT")) {
             crearRol(
                 "ROOT",
                 "Rol de administrador del sistema",
@@ -50,7 +50,7 @@ public class UsuarioRolSeeder implements ApplicationRunner {
             );
         }
 
-        if (!rolRepository.existsByRolNombre("MOD_USUARIOS")) {
+        if (!rolRepository.existsByNombre("MOD_USUARIOS")) {
             crearRol(
                 "MOD_USUARIOS",
                 "Rol solo crear usuarios del sistema",
@@ -59,7 +59,7 @@ public class UsuarioRolSeeder implements ApplicationRunner {
             );
         }
 
-        if (!rolRepository.existsByRolNombre("GUEST")) {
+        if (!rolRepository.existsByNombre("GUEST")) {
             crearRol(
                 "GUEST",
                 "Rol de invitado del sistema",
@@ -87,9 +87,9 @@ public class UsuarioRolSeeder implements ApplicationRunner {
         GrupoEntity grupo = grupoOpt.get();
 
         UsuarioRolEntity rol = UsuarioRolEntity.builder()
-                .rolNombre(nombreRol)
-                .rolDescripcion(descripcion)
-                .rolEsAdministrador(esAdministrador)
+                .nombre(nombreRol)
+                .descripcion(descripcion)
+                .esAdministrador(esAdministrador)
                 .esActivo(true)
                 .build();
 
