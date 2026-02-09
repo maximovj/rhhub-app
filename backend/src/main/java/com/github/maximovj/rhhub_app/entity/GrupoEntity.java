@@ -91,15 +91,15 @@ public class GrupoEntity {
     @Builder.Default
     @JsonIgnore
     //@JsonIgnoreProperties({"grupos", "hibernateLazyInitializer", "handler"}) // <-- CORREGIDO: "grupos" en lugar de "permisos"
-    private Set<PermisosEntity> permisos = new HashSet<>();
+    private Set<PermisoEntity> permisos = new HashSet<>();
 
     // Métodos helper corregidos
-    public void addPermiso(PermisosEntity permiso) {
+    public void addPermiso(PermisoEntity permiso) {
         this.permisos.add(permiso);
         permiso.getGrupos().add(this); // <-- IMPORTANTE: mantener consistencia bidireccional
     }
     
-    public void removePermiso(PermisosEntity permiso) {
+    public void removePermiso(PermisoEntity permiso) {
         this.permisos.remove(permiso);
         permiso.getGrupos().remove(this); // <-- IMPORTANTE: mantener consistencia bidireccional
     }

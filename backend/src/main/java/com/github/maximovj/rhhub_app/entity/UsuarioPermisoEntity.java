@@ -49,7 +49,7 @@ public class UsuarioPermisoEntity {
     @MapsId("permisoId")
     @JoinColumn(name = "PERMISO_ID")
     @JsonIgnore
-    private PermisosEntity permiso;
+    private PermisoEntity permiso;
 
     @Column(name = "ESTADO")
     private Boolean estado;

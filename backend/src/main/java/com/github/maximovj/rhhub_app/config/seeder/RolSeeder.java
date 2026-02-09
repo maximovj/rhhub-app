@@ -13,7 +13,7 @@ import com.github.maximovj.rhhub_app.config.properties.SeederProperties;
 import com.github.maximovj.rhhub_app.entity.GrupoEntity;
 import com.github.maximovj.rhhub_app.entity.RolEntity;
 import com.github.maximovj.rhhub_app.repository.GrupoRepository;
-import com.github.maximovj.rhhub_app.repository.UsuarioPermisosRepository;
+import com.github.maximovj.rhhub_app.repository.PermisoRepository;
 import com.github.maximovj.rhhub_app.repository.RolRepository;
 
 import jakarta.transaction.Transactional;
@@ -27,7 +27,7 @@ public class RolSeeder implements ApplicationRunner {
     RolRepository rolRepository;
 
     @Autowired
-    UsuarioPermisosRepository permisosRepository;
+    PermisoRepository permisosRepository;
 
     @Autowired
     GrupoRepository gruposRepository;

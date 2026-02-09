@@ -11,19 +11,19 @@ import org.springframework.stereotype.Component;
 
 import com.github.maximovj.rhhub_app.config.properties.SeederProperties;
 import com.github.maximovj.rhhub_app.entity.UsuarioPermisoEstadoEntity;
-import com.github.maximovj.rhhub_app.entity.PermisosEntity;
+import com.github.maximovj.rhhub_app.entity.PermisoEntity;
 import com.github.maximovj.rhhub_app.repository.UsuarioPermisoEstadoRepository;
-import com.github.maximovj.rhhub_app.repository.UsuarioPermisosRepository;
+import com.github.maximovj.rhhub_app.repository.PermisoRepository;
 
 import jakarta.transaction.Transactional;
 
 @Profile("seeder")
 @Component
 @Order(3)
-public class UsuarioPermisosSeeder implements ApplicationRunner {
+public class PermisoSeeder implements ApplicationRunner {
 
     @Autowired
-    UsuarioPermisosRepository repository;
+    PermisoRepository repository;
 
     @Autowired
     UsuarioPermisoEstadoRepository usuarioPermisoEstadoRepository;
@@ -50,7 +50,7 @@ public class UsuarioPermisosSeeder implements ApplicationRunner {
                     UsuarioPermisoEstadoEntity estado_activo = estado.get();
 
                     // Crear el objeto de manera más explícita
-                    PermisosEntity permiso = PermisosEntity.builder()
+                    PermisoEntity permiso = PermisoEntity.builder()
                     .permisoAccion(strPermiso)  // Esto es un literal, no es null
                     .permisoModulo("MODULO_USUARIOS")
                     .build();

@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 
 import com.github.maximovj.rhhub_app.config.properties.SeederProperties;
 import com.github.maximovj.rhhub_app.entity.GrupoEntity;
-import com.github.maximovj.rhhub_app.entity.PermisosEntity;
+import com.github.maximovj.rhhub_app.entity.PermisoEntity;
 import com.github.maximovj.rhhub_app.repository.GrupoRepository;
-import com.github.maximovj.rhhub_app.repository.UsuarioPermisosRepository;
+import com.github.maximovj.rhhub_app.repository.PermisoRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -29,7 +29,7 @@ public class GrupoSeeder implements ApplicationRunner {
     GrupoRepository gruposRepository;
 
     @Autowired
-    UsuarioPermisosRepository permisosRepository;
+    PermisoRepository permisosRepository;
 
     @Autowired
     SeederProperties seederProperties;
@@ -49,7 +49,7 @@ public class GrupoSeeder implements ApplicationRunner {
         }
 
         if (!gruposRepository.existsByNombre("MOD_USUARIOS")) {
-            Set<PermisosEntity> permisos = new HashSet<>(
+            Set<PermisoEntity> permisos = new HashSet<>(
                 permisosRepository.findByPermisoAccionIn(
                     List.of("VIEW_USUARIOS", "UPDATE_USUARIOS")
                 )
@@ -75,7 +75,7 @@ public class GrupoSeeder implements ApplicationRunner {
     private void crearGrupo(
             String nombre,
             String descripcion,
-            Set<PermisosEntity> permisos
+            Set<PermisoEntity> permisos
     ) {
         GrupoEntity grupo = GrupoEntity.builder()
                 .nombre(nombre)

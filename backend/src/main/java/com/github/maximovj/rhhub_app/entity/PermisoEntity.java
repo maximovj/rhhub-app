@@ -42,7 +42,7 @@ import lombok.ToString;
         )
     }
 )
-public class PermisosEntity {
+public class PermisoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

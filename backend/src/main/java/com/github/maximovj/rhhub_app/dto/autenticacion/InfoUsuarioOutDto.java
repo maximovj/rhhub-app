@@ -3,7 +3,7 @@ package com.github.maximovj.rhhub_app.dto.autenticacion;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.maximovj.rhhub_app.entity.PermisosEntity;
+import com.github.maximovj.rhhub_app.entity.PermisoEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,7 @@ public class InfoUsuarioOutDto {
     @JsonProperty(value = "es_admin")
     private boolean esAdmin;
 
-    private Set<PermisosEntity> permisos;
+    private Set<PermisoEntity> permisos;
 
     private boolean recuerdame;
 
