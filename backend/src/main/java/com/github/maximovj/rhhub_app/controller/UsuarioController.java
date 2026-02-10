@@ -35,6 +35,14 @@ public class UsuarioController {
         return this.usuarioService.busqueda(page, size);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> putActualizarUsuario(
+        @PathVariable Long id,
+        @RequestBody @Valid UsuarioRequest req
+    ) {
+        return this.usuarioService.actualizarUsuarioEntity(id, req);
+    }
+
     @GetMapping("/{usuario_id}")
     public ResponseEntity<?> verUsuario(
         @PathVariable(required = true, name = "usuario_id") Long usuarioId
@@ -47,14 +55,6 @@ public class UsuarioController {
         @PathVariable(required = true, name = "usuario_id") Long usuarioId
     ){
         return this.usuarioService.eliminarUsuarioEntity(usuarioId);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> putActualizarUsuario(
-        @PathVariable Long id,
-        @RequestBody @Valid UsuarioRequest req
-    ) {
-        return this.usuarioService.actualizarUsuarioEntity(id, req);
     }
 
 }

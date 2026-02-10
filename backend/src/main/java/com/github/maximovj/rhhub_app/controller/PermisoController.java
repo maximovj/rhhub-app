@@ -41,14 +41,6 @@ public class PermisoController {
         log.info("getVerDetallePermiso recibido: {}", permisoId);
         return this.service.verUnPermiso(permisoId);
     }
-    
-    @PostMapping("")
-    public ResponseEntity<?> postCrearPermiso(
-        @RequestBody PermisoRequest req
-    ) {
-        log.info("postCrearPermiso recibido: {}", req.toString()); 
-        return this.service.crearUnPermiso(req);
-    }
 
     @PutMapping("/{permiso_id}")
     public ResponseEntity<?> putActualizarPermiso(
@@ -57,6 +49,14 @@ public class PermisoController {
     ) {
         log.info("putActualizarPermiso recibido: {} / {}", permisoId, req.toString()); 
         return this.service.actualizarUnPermiso(permisoId, req);
+    }
+    
+    @PostMapping("")
+    public ResponseEntity<?> postCrearPermiso(
+        @RequestBody PermisoRequest req
+    ) {
+        log.info("postCrearPermiso recibido: {}", req.toString()); 
+        return this.service.crearUnPermiso(req);
     }
 
     @DeleteMapping("/{permiso_id}")

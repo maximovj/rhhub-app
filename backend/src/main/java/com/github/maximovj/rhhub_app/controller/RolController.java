@@ -38,20 +38,11 @@ public class RolController {
 
     // !! Ver detalle de un rol
     @GetMapping("/{rol_id}")
-    public ResponseEntity<?> getVerDetalleRol(
+    public ResponseEntity<?> getVerUnReol(
         @PathVariable(name = "rol_id") Long rolId
     ) {
-        log.info("getVerDetalleRol recibido: {}", rolId);
+        log.info("getVerUnReol recibido: {}", rolId);
         return this.service.verDetalleRol(rolId);
-    }
-
-    // !! Crear un rol
-    @PostMapping("")
-    public ResponseEntity<?> postCrearRol(
-        @RequestBody @Valid RolRequest req
-    ) {
-        log.info("postCrearRol recibido: {}", req.toString());
-        return this.service.crearRol(req);
     }
 
     // Actualizar un rol
@@ -62,6 +53,15 @@ public class RolController {
     {
         log.info("putActualizarRol recibido: {}", req.toString());
         return this.service.actualizarRol(rolId, req);
+    }
+
+    // !! Crear un rol
+    @PostMapping("")
+    public ResponseEntity<?> postCrearRol(
+        @RequestBody @Valid RolRequest req
+    ) {
+        log.info("postCrearRol recibido: {}", req.toString());
+        return this.service.crearRol(req);
     }
 
     // Eliminar un rol
