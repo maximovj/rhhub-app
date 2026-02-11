@@ -17,7 +17,7 @@ public class PermisoRequest {
     @PositiveOrZero(message = "El campo permiso_id debe ser un número postivo")
     @JsonProperty(value = "permiso_id")
     @Builder.Default
-    private Long permisoId = null;
+    private Long permiso_id = null;
     
     @NotBlank(message = "El campo accion es obligatoria")
     @Size(min = 3, max = 20, message = "El campo accion debe tener entre 3 y 20 caracteres")
