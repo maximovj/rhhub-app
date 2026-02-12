@@ -64,10 +64,6 @@ public class UsuarioDao {
             return null;
         }
 
-        if(req.getEs_activo() != null) { 
-            entidad.setEsActivo(req.getEs_activo());
-        }
-
         if(req.getUsuario() != null && !req.getUsuario().isBlank()) { 
             entidad.setUsuario(req.getUsuario());
         }

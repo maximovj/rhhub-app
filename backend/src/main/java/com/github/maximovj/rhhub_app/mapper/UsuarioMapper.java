@@ -19,7 +19,6 @@ public class UsuarioMapper {
         return new UsuarioDTO(e.getUsuarioId(), 
             e.getUsuario(), 
             e.getCorreo(), 
-            e.getEsActivo(), 
             e.getToken(), 
             null, 
             null);
@@ -32,11 +31,6 @@ public class UsuarioMapper {
             UsuarioRequest req, 
             PasswordEncoder passwordEncoder
     ) {
-        // Actualización parcial de campos simples
-        if (req.getEs_activo() != null) {
-            usuario.setEsActivo(req.getEs_activo() == null ? false : req.getEs_activo());
-        }
-
         if (req.getUsuario() != null && !req.getUsuario().isBlank()) {
             usuario.setUsuario(req.getUsuario());
         }
@@ -63,12 +57,6 @@ public class UsuarioMapper {
         try {
             UsuarioEntity usuario = new UsuarioEntity();
 
-            if (req.getEs_activo() != null) {
-                usuario.setEsActivo(req.getEs_activo());
-            } else {
-                usuario.setEsActivo(false); // valor por defecto
-            }
-
             if (req.getUsuario() != null && !req.getUsuario().isBlank()) {
                 usuario.setUsuario(req.getUsuario());
             }
@@ -87,6 +75,8 @@ public class UsuarioMapper {
             ) {
                 usuario.setContrasena(passwordEncoder.encode(req.getConfirmar_contrasena().trim()));
             }
+
+            usuario.setEsActivo(false);
             return Optional.of(usuario);
         } catch (Exception e) {
             System.out.println("Hubo un error: %s".formatted(e.getMessage()));

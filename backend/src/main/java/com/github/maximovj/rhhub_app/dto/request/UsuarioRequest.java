@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 @Builder
@@ -43,10 +41,5 @@ public class UsuarioRequest {
             message = "La contraseña solo puede contener letras, números, puntos, guiones, guiones bajos y simbolos (.-@#')")
     @JsonProperty(value = "confirmar_contrasena")
     private String confirmar_contrasena;
-
-    //@NotNull(message = "El campo es_activo es obligatorio y debe ser true o false")
-    @JsonProperty(value = "es_activo", required = false, defaultValue = "false")
-    @Builder.Default
-    private Boolean es_activo = false;
 
 }

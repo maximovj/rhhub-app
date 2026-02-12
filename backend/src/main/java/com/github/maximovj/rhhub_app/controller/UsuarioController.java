@@ -1,16 +1,15 @@
 package com.github.maximovj.rhhub_app.controller;
 
-import com.github.maximovj.rhhub_app.dto.records.UsuarioDTO;
 import com.github.maximovj.rhhub_app.dto.request.UsuarioRequest;
 import com.github.maximovj.rhhub_app.dto.response.ApiResponse;
-import com.github.maximovj.rhhub_app.entity.GrupoEntity;
+import com.github.maximovj.rhhub_app.entity.RolEntity;
 import com.github.maximovj.rhhub_app.entity.UsuarioEntity;
 import com.github.maximovj.rhhub_app.exception.BusinessException;
 import com.github.maximovj.rhhub_app.exception.ResourceNotFoundException;
+import com.github.maximovj.rhhub_app.mapper.RolMapper;
 import com.github.maximovj.rhhub_app.mapper.UsuarioMapper;
 import com.github.maximovj.rhhub_app.projection.UsuarioProjection;
 import com.github.maximovj.rhhub_app.repository.specification.UsuarioSpecBuilder;
-import com.github.maximovj.rhhub_app.repository.specification.UsuarioSpecification;
 import com.github.maximovj.rhhub_app.service.UsuarioService;
 
 import jakarta.validation.Valid;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 import java.util.Optional;
-
-import javax.naming.NotContextException;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -72,7 +69,6 @@ public class UsuarioController {
                                             .usuarioId(req.getUsuario_id())
                                             .usuario(req.getUsuario())
                                             .correo(req.getCorreo())
-                                            .esActivo(req.getEs_activo())
                                             .build();
         Pageable pageable = PageRequest.of(page, size, Sort.by("usuario").ascending());
         return response.okPage("Filtro de usuarios", this.usuarioService.buscarUsuarios(spec, pageable));
@@ -95,7 +91,7 @@ public class UsuarioController {
         UsuarioMapper.updateFromRequest(usuario, req, passwordEncoder);
         
         UsuarioEntity usuarioActualizada = this.usuarioService.update(id, usuario);
-        return ApiResponse.ok("Usuario actulizada correctamente", UsuarioMapper.toDTOBasic(usuarioActualizada));
+        return ApiResponse.ok("Usuario actualizada correctamente", UsuarioMapper.toDTOBasic(usuarioActualizada));
     }
 
     @PostMapping
@@ -136,8 +132,16 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEliminarUnUsuario(@PathVariable Long id) {
         try {
-            usuarioService.delete(id);
-            return ApiResponse.ok("Usuario eliminado correctamente", null);
+           Objects.requireNonNull(id, "El campo usuario_id es obligatoria");
+            log.info("deleteEliminarUnUsuario recibido: {}", id);
+
+            UsuarioEntity usuario = this.usuarioService.findById(id);
+            if(Objects.isNull(usuario)) {
+                return ApiResponse.notFound("Usuario con id(%d) no encontrada".formatted(id), null);
+            }
+
+            this.usuarioService.delete(id);
+            return ApiResponse.ok("Usuario con id(%d) eliminado correctamente".formatted(id), UsuarioMapper.toDTOBasic(usuario));
         } catch (ResourceNotFoundException e) {
             return ApiResponse.conflict(e.getMessage(), null);
         } catch (BusinessException e) {

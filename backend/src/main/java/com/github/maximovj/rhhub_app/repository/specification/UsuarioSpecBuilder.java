@@ -1,7 +1,5 @@
 package com.github.maximovj.rhhub_app.repository.specification;
 
-import org.springframework.data.jpa.domain.Specification;
-
 import com.github.maximovj.rhhub_app.entity.UsuarioEntity;
 
 public class UsuarioSpecBuilder extends BaseSpecification<UsuarioEntity> {
@@ -27,14 +25,4 @@ public class UsuarioSpecBuilder extends BaseSpecification<UsuarioEntity> {
         return this;
     }
 
-    public UsuarioSpecBuilder esActivo(Boolean activo) {
-        if (activo != null) {
-            super.spec = super.spec.and(equalsSpec("esActivo", activo));
-        }
-        return this;
-    }
-
-    public Specification<UsuarioEntity> build() {
-        return super.spec;
-    }
 }

@@ -13,7 +13,6 @@ import com.github.maximovj.rhhub_app.exception.BusinessException;
 import com.github.maximovj.rhhub_app.exception.ResourceNotFoundException;
 import com.github.maximovj.rhhub_app.projection.UsuarioProjection;
 import com.github.maximovj.rhhub_app.repository.UsuarioRepository;
-import com.github.maximovj.rhhub_app.repository.specification.UsuarioSpecification;
 import com.github.maximovj.rhhub_app.service.integration.BaseServiceImpl;
 import com.github.maximovj.rhhub_app.service.integration.JpaBaseRepository;
 

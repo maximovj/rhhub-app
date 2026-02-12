@@ -59,10 +59,12 @@ public class UsuarioEntity {
 
     @Column(name = "CONTRASENA", nullable = false)
     @JsonProperty("contrasena")
+    @JsonIgnore
     private String contrasena;
-
+    
     @Column(name = "ES_ACTIVO", nullable = false)
     @JsonProperty("es_activo")
+    @JsonIgnore
     private Boolean esActivo;
 
     @Column(name = "TOKEN")
