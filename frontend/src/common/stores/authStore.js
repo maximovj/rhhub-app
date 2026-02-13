@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     esSuperAdministrador(state) {
-      return false //state.esAdmin
+      return state.esAdmin
     },
 
     hasPermiso(state) {

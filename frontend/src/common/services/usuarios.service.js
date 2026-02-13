@@ -8,25 +8,6 @@ class UsuariosService extends BaseService {
     super('/usuarios')
   }
 
-  async getqBusqueda() {
-    return await this.custom('get', '/q/busqueda')
-    .then(res => {
-        if(res.data?.exitosa) {
-          return res.data?.contenido;
-        }
-        return null;
-    })
-    .catch( async err => {
-        const alert = useAlertStore();
-        await alert.alert({ 
-          title:'Iniciar sesión',
-          message: err?.response?.data?.error || err.message,
-        });
-        return null;
-      })
-    .finally(() => {/* Código */});
-  }
-
 }
 
 export default new UsuariosService()

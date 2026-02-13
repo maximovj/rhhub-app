@@ -194,7 +194,7 @@ watch(() => data.value.visible, async (isVisible) => {
                     id="rol"
                     class="flex-auto"
                     :disabled="esAdmin || !data.usuario.es_activo"
-                    v-model="data.usuario.grupo.rol.rol_nombre"
+                    v-model="data.usuario.grupo.rol.nombre"
                 />
                 </CustomField>
 

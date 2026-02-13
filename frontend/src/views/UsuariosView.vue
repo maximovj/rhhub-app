@@ -73,9 +73,9 @@ export default {
     async cargarUsuarios() {
       try {
         this.cargandoDatos = true;
-        const getqBusqueda = await usuariosService.getqBusqueda();
-        logger.info("cargarUsuarios", "getqBusqueda", getqBusqueda);
-        this.usuarios = getqBusqueda?.content || [];
+        const getAll = await usuariosService.getAll();
+        logger.info("cargarUsuarios", "getAll", getAll);
+        this.usuarios = getAll?.data?.contenido?.content || [];
       } catch (e) {
         console.error(e);
       } finally {
