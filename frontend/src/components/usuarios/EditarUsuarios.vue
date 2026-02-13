@@ -1,9 +1,10 @@
 <script setup>
 import { ref, defineProps, watch, computed } from "vue";
 import usuariosService from "@/common/services/usuarios.service";
+import gruposService from "@/common/services/grupos.service";
 import { useAlertStore } from "@/common/stores/alertStore";
 
-import { scopedLogger } from "@/common/utils/loggerUtils";
+import { log, scopedLogger } from "@/common/utils/loggerUtils";
 const logger = scopedLogger("EditarUsuarios.vue");
 
 import accion from "@/common/acciones/usuarios.acciones";
@@ -25,7 +26,7 @@ function createInitialState() {
     cargandoDatos: false,
     tituloCabecera: "MODIFICAR USUARIO",
     grupoSeleccionado: 1,
-    grupos: [{ name: 'ADMINISTRADOR', code: 1 }],
+    grupos: [{ nombre: 'ADMINISTRADOR', grupo_id: 1 }],
   };
 }
 
@@ -35,9 +36,9 @@ function resetData() {
   data.value = createInitialState();
 }
 
-const esAdmin = computed(() => data.value?.usuario?.grupo?.rol?.rol_es_administrador);
+const esAdmin = computed(() => data.value?.usuario?.grupo?.rol?.es_administrador || false);
 
-const habilitarCampos = computed(() => !accion.value.root && esAdmin.value || !data.value.usuario.es_activo && accion.value.update);
+const habilitarCampos = computed(() => !accion.value.root && esAdmin.value && accion.value.update);
 
 const fnGuardar = async () => {
     const useAlert = useAlertStore();
@@ -100,13 +101,23 @@ watch(() => data.value.visible, async (isVisible) => {
     data.value.cargandoDatos = true;
     const res = await usuariosService.getById(props.usuarioId);
     logger.info("watch", {res});
-    
+
     if(res.data?.exitosa) {
         data.value.usuario = res.data?.contenido;
         logger.info("watch::if", "data.value.usuario", data.value.usuario);
         data.value.grupoSeleccionado = data.value.usuario?.grupo?.usuario_grupo_id;
     } else {
         data.value.visible = false;
+    }
+
+    if(habilitarCampos) {
+        const resGrupos = await gruposService.getAll();
+        logger.info("watch", {resGrupos});
+
+        if(resGrupos.data?.exitosa) {
+            data.value.grupos = resGrupos.data?.contenido?.content;
+            logger.info("watch::if", "data.value.grupos", data.value.grupos);
+        }
     }
 
     data.value.cargandoDatos = false;
@@ -157,12 +168,6 @@ watch(() => data.value.visible, async (isVisible) => {
                 <Divider align="center" type="dotted">
                 <b>Opciones avanzadas</b>
                 </Divider>
-
-                <CustomField label="¿Es activo?">
-                <Skeleton v-if="data.cargandoDatos" width="12rem" />
-                <ToggleSwitch :disabled="esAdmin" v-else v-model="data.usuario.es_activo" />
-                </CustomField>
-
                 
                 <!-- <CustomField label="Seleccione un grupo">
                 <Skeleton v-if="data.cargandoDatos" width="12rem" />
@@ -178,13 +183,23 @@ watch(() => data.value.visible, async (isVisible) => {
 
                 <CustomField label="Grupo" forId="rol">
                 <Skeleton v-if="data.cargandoDatos" />
-                <InputText
-                    v-else
-                    id="rol"
-                    class="flex-auto"
-                    :disabled="esAdmin || !data.usuario.es_activo"
-                    v-model="data.usuario.grupo.nombre"
-                />
+                <template v-else>
+                    <InputText
+                        v-if="esAdmin"
+                        id="rol"
+                        class="flex-auto"
+                        :disabled="esAdmin"
+                        v-model="data.usuario.grupo.nombre"
+                    />
+                    <Select v-else 
+                        :disabled="esAdmin"
+                        v-model="data.usuario.grupo.usuario_grupo_id" 
+                        :options="data.grupos" 
+                        optionLabel="nombre" 
+                        optionValue="grupo_id" 
+                        placeholder="Selecciona un grupo" 
+                        class="w-1/2" />
+                </template>
                 </CustomField>
 
                 <CustomField label="Rol" forId="rol">
@@ -193,8 +208,8 @@ watch(() => data.value.visible, async (isVisible) => {
                     v-else
                     id="rol"
                     class="flex-auto"
-                    :disabled="esAdmin || !data.usuario.es_activo"
-                    v-model="data.usuario.grupo.rol.nombre"
+                    :disabled="true"
+                    :value="data.usuario.grupo.rol.nombre"
                 />
                 </CustomField>
 

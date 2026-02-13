@@ -38,8 +38,8 @@ export const useAuthStore = defineStore('auth', {
           Array.isArray(state.permisos) &&
           state.permisos.some(
             p =>
-              p.permiso_modulo === modulo &&
-              p.permiso_accion === accion
+              p.modulo === modulo &&
+              p.accion === accion
           )
         )
       }
