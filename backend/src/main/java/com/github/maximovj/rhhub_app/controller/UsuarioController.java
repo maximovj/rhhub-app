@@ -123,11 +123,11 @@ public class UsuarioController {
     ) {
         ValidRequest.requireNonNull(usuarioId, "El campo id es obligatoria");
         
-        UsuarioEntity usuario = this.usuarioService.findById(usuarioId);
+        UsuarioEntity usuario = this.usuarioService.cargarUsuario(usuarioId).orElse(null);
         if(usuario == null) {
             return ApiResponse.notFound("Usuario no encontrado", null);
         }
-        return ApiResponse.ok("Info del usuario localizado correctamente", UsuarioMapper.toDTOBasic(usuario));
+        return ApiResponse.ok("Info del usuario localizado correctamente", UsuarioMapper.toDTO(usuario));
     }
 
     @DeleteMapping("/{id}")

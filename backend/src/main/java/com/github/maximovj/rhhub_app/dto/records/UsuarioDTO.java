@@ -1,17 +1,14 @@
 package com.github.maximovj.rhhub_app.dto.records;
 
-import java.util.Set;
-
 import com.github.maximovj.rhhub_app.entity.UsuarioEntity;
 import com.github.maximovj.rhhub_app.entity.UsuarioEstadoEntity;
-import com.github.maximovj.rhhub_app.entity.GrupoEntity;
 
 public record UsuarioDTO(
     Long usuario_id,
     String usuario,
     String correo,
     String token,
-    GrupoEntity grupo,
+    GrupoDTO grupo,
     UsuarioEstadoEntity estado) {
 
     public UsuarioDTO(UsuarioEntity e) {
@@ -19,11 +16,11 @@ public record UsuarioDTO(
             e.getUsuario(),
             e.getCorreo(),
             e.getToken(),
-            e.getGrupo(),
+            new GrupoDTO(e.getGrupo()),
             e.getEstado());
     }
 
-    public UsuarioDTO(UsuarioEntity e, GrupoEntity grupo, UsuarioEstadoEntity estado) {
+    public UsuarioDTO(UsuarioEntity e, GrupoDTO grupo, UsuarioEstadoEntity estado) {
         this(e.getUsuarioId(),
             e.getUsuario(),
             e.getCorreo(),

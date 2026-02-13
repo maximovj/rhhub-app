@@ -1,5 +1,7 @@
 package com.github.maximovj.rhhub_app.service;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,6 +42,10 @@ public class UsuarioService extends BaseServiceImpl<UsuarioEntity, Long, Usuario
         }
 
         super.delete(id);
+    }
+
+    public Optional<UsuarioEntity> cargarUsuario(Long usuario_id) {
+        return this.jpaBaseRepository.findByUsuarioIdWithRelations(usuario_id);
     }
 
     public UsuarioEntity findByUsuario(String usuario) {
