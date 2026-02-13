@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Avatar: typeof import('primevue/avatar')['default']
     Button: typeof import('primevue/button')['default']
     CabeceraPorDefecto: typeof import('./src/components/lazy/CabeceraPorDefecto.vue')['default']
     Card: typeof import('primevue/card')['default']
@@ -26,9 +27,11 @@ declare module 'vue' {
     InfoUsuario: typeof import('./src/components/usuarios/InfoUsuario.vue')['default']
     InputText: typeof import('primevue/inputtext')['default']
     Menu: typeof import('primevue/menu')['default']
+    OverlayPanel: typeof import('primevue/overlaypanel')['default']
     Password: typeof import('primevue/password')['default']
     PlantillaBase: typeof import('./src/components/PlantillaBase.vue')['default']
     PlantillaBaseCentrada: typeof import('./src/components/PlantillaBaseCentrada.vue')['default']
+    Popover: typeof import('primevue/popover')['default']
     ProgressSpinner: typeof import('primevue/progressspinner')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

@@ -4,15 +4,22 @@ import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { useAlertStore } from '@/common/stores/alertStore';
 import autenticacionService from '@/common/services/autenticacion.service';
+import { useAuthStore } from '@/common/stores/authStore';
 
 // Referencias computadas
+const opInfoUsuario = ref();
 const router = useRouter();
 const route = useRoute();
 const showIconToolbar = ref(false);
+const auth = useAuthStore();
 
 // Métodos
 const isActive = (path) => {
     return route.path.startsWith(path) ? 'p-button-primary' : ''
+}
+
+const verInfoUsuario = (event) => {
+    opInfoUsuario.value.toggle(event)
 }
 
 const salir =  async () =>  { 
@@ -53,16 +60,77 @@ const salir =  async () =>  {
     </div>
     </div>
 
+    
+
     <!-- Derecha -->
     <div class="flex items-center gap-2 sm:gap-3">
-    <ThemeToggle />
-    <Button icon="pi pi-bell" class="p-button-text" />
-    <Button
-        label="Salir"
-        icon="pi pi-power-off"
-        @click="salir"
-        class="p-button-danger p-button-text hidden sm:inline-flex"
-    />
+        <p>
+            <span class="font-medium truncate">Usuario:&nbsp;</span>
+            <span class="font-medium truncate">
+                        {{ auth.usuario }}
+            </span>
+        </p>
+        <Avatar 
+            icon="pi pi-user" 
+            class="mr-2" 
+            size="large" 
+            style="background-color: #ece9fc; color: #2a1261" 
+            shape="circle" 
+            @click="verInfoUsuario" />
+        
+        <Popover
+            ref="opInfoUsuario"
+            dismissable
+            class="p-0 border-none shadow-2xl rounded-xl"
+            >
+            <div class="w-56 p-0">
+
+                <!-- Info compacta -->
+                <div class="px-4 py-3 border-b dark:border-gray-700">
+               
+                <p class="text-xs text-gray-500 truncate">
+                    {{ auth.grupo }} · {{ auth.rol }}
+                </p>
+                </div>
+
+                <!-- Acciones -->
+                <div class="py-1">
+
+                <button
+                    class="w-full flex items-center gap-3 px-4 py-2 text-sm
+                        hover:bg-gray-100 dark:hover:bg-gray-700
+                        transition-colors"
+                    @click="$router.push('/perfil')"
+                >
+                    <i class="pi pi-user text-gray-500"></i>
+                    Mi perfil
+                </button>
+
+                <button
+                    class="w-full flex items-center gap-3 px-4 py-2 text-sm
+                        hover:bg-gray-100 dark:hover:bg-gray-700
+                        transition-colors"
+                >
+                    <i class="pi pi-cog text-gray-500"></i>
+                    Configuración
+                </button>
+
+                <div class="my-1 border-t dark:border-gray-700"></div>
+
+                <button
+                    @click="salir"
+                    class="w-full flex items-center gap-3 px-4 py-2 text-sm
+                        text-red-500 hover:bg-red-50
+                        dark:hover:bg-red-900/30
+                        transition-colors"
+                >
+                    <i class="pi pi-power-off"></i>
+                    Cerrar sesión
+                </button>
+
+                </div>
+            </div>
+        </Popover>
     </div>
 </div>
 
@@ -108,3 +176,9 @@ const salir =  async () =>  {
     </div>
 </transition>
 </template>
+
+<style>
+.p-popover-content {
+    padding: 0px !important;
+}
+</style>
