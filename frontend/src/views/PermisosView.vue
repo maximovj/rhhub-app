@@ -267,69 +267,120 @@
         </template>
       </Column>
 
-    <template #paginatorcontainer="{ first, last, page, pageCount, prevPageCallback, nextPageCallback, rowChangeCallback, totalRecords }">
-      <div class="w-full">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <!-- Dropdown con etiqueta -->
-          <div class="flex items-center gap-2">
-            <span class="text-sm font-medium text-gray-700">Mostrar:</span>
-            <Dropdown 
-              :options="[2, 10, 50, 100]" 
-              v-model="rows" 
-              @change="rowChangeCallback(rows)"
-              class="w-20"
-              style="height: 38px;"
-            />
-            <span class="text-sm text-gray-500">registros</span>
-          </div>
-          
-          <!-- Progreso con etiqueta -->
-          <div class="flex items-center gap-3">
-            <span class="text-sm font-medium text-gray-700">Avance:</span>
-            <div class="w-40 h-2.5 bg-white border border-gray-200 rounded-full overflow-hidden">
-              <div 
-                class="h-full bg-blue-500 transition-all"
-                :style="{ width: `${((page + 1) / pageCount) * 100}%` }"
-              ></div>
-            </div>
-            <span class="text-sm bg-blue-50 text-blue-700 px-2 py-1 rounded-md">
-              {{ page + 1 }}/{{ pageCount }}
-            </span>
-          </div>
-          
-          <!-- Rango de registros -->
-          <div class="text-sm bg-white px-4 py-2 rounded-md border border-gray-200">
-            <span class="text-gray-500">Registros:</span>
-            <span class="font-medium text-gray-900 ml-1">{{ first }}</span>
-            <span class="text-gray-400 mx-1">–</span>
-            <span class="font-medium text-gray-900">{{ last }}</span>
-            <span class="text-gray-400 mx-2">|</span>
-            <span class="font-medium text-gray-900">{{ totalRecords }}</span>
-            <span class="text-gray-500 ml-1">total</span>
-          </div>
-          
-          <!-- Navegación simple -->
-          <div class="flex items-center gap-1">
-            <Button 
-              icon="pi pi-chevron-left" 
-              severity="secondary" 
-              rounded
-              @click="prevPageCallback" 
-              :disabled="page === 0"
-              class="w-9 h-9"
-            />
-            <Button 
-              icon="pi pi-chevron-right" 
-              severity="secondary" 
-              rounded
-              @click="nextPageCallback" 
-              :disabled="page === pageCount - 1"
-              class="w-9 h-9"
-            />
-          </div>
+<template #paginatorcontainer="{ first, last, page, pageCount, prevPageCallback, nextPageCallback, rowChangeCallback, totalRecords }">
+  <div class="w-full">
+    <!-- Cabecera del paginador -->
+    <div class="flex items-center justify-end mb-4">
+      <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+        {{ totalRecords }} registros en total
+      </span>
+    </div>
+    
+    <!-- Cuerpo principal -->
+    <div class="flex items-center justify-between">
+      <!-- Dropdown con diseño elegante -->
+      <div class="flex items-center gap-3">
+        <div class="bg-gray-50 rounded-lg p-2">
+          <i class="pi pi-list text-gray-500"></i>
+        </div>
+        <div>
+          <span class="text-xs text-gray-500 block mb-1">Filas por vista</span>
+          <Dropdown 
+            :options="[2, 10, 50, 100]" 
+            v-model="rows" 
+            @change="rowChangeCallback(rows)"
+            class="w-28"
+            style="height: 42px;"
+          >
+            <template #value="slotProps">
+              <span class="text-sm font-medium">{{ slotProps.value }} filas</span>
+            </template>
+          </Dropdown>
         </div>
       </div>
-    </template>
+      
+      <!-- Progreso circular con info -->
+      <div class="flex items-center gap-4">
+        <div class="relative w-16 h-16">
+          <svg class="w-16 h-16 transform -rotate-90">
+            <circle
+              cx="32"
+              cy="32"
+              r="28"
+              stroke="#e5e7eb"
+              stroke-width="3"
+              fill="none"
+            />
+            <circle
+              cx="32"
+              cy="32"
+              r="28"
+              stroke="#3b82f6"
+              stroke-width="3"
+              fill="none"
+              :stroke-dasharray="2 * Math.PI * 28"
+              :stroke-dashoffset="2 * Math.PI * 28 * (1 - (page + 1) / pageCount)"
+              class="transition-all duration-500"
+              stroke-linecap="round"
+            />
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <span class="text-lg font-bold text-blue-600">{{ page + 1 }}</span>
+            <span class="text-xs text-gray-400">/{{ pageCount }}</span>
+          </div>
+        </div>
+        
+        <div>
+          <span class="text-xs text-gray-500 block">PROGRESO</span>
+          <span class="text-2xl font-light text-gray-800">{{ Math.round(((page + 1) / pageCount) * 100) }}%</span>
+          <span class="text-sm text-gray-500 block">completado</span>
+        </div>
+      </div>
+      
+      <!-- Navegación y rango -->
+      <div class="flex items-center gap-4">
+        <div class="text-right border-r border-gray-200 pr-4">
+          <span class="text-xs text-gray-500 block">MOSTRANDO</span>
+          <span class="text-xl font-light text-gray-800">{{ first }}</span>
+          <span class="text-gray-400 mx-1">→</span>
+          <span class="text-xl font-light text-gray-800">{{ last }}</span>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <Button 
+            icon="pi pi-chevron-left" 
+            severity="secondary" 
+            rounded
+            @click="prevPageCallback" 
+            :disabled="page === 0"
+            class="w-12 h-12"
+          />
+          <Button 
+            icon="pi pi-chevron-right" 
+            severity="secondary" 
+            rounded
+            @click="nextPageCallback" 
+            :disabled="page === pageCount - 1"
+            class="w-12 h-12"
+          />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Barra de progreso adicional -->
+    <div class="mt-4 pt-3 border-t border-gray-100">
+      <div class="flex items-center gap-2">
+        <div class="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div 
+            class="h-full bg-blue-600 transition-all"
+            :style="{ width: `${((page + 1) / pageCount) * 100}%` }"
+          ></div>
+        </div>
+        <span class="text-xs text-gray-500">Página {{ page + 1 }} de {{ pageCount }}</span>
+      </div>
+    </div>
+  </div>
+</template>
 
       
     </DataTable>
