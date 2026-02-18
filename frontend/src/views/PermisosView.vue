@@ -234,6 +234,7 @@ export default {
           estado: { alignment: { horizontal: 'center' } }
         },
 
+        /*
         rowStyle: {
           estado: { fill: {
               type: 'pattern',
@@ -242,6 +243,25 @@ export default {
             } 
           }
         },
+        */
+
+        rowStyle: ({ row }) => {
+          const cell = row.getCell('estado')
+
+          if (cell.value === 'Activo') {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FFD1FAE5' }
+            }
+          } else {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FFFEE2E2' }
+            }
+          }
+        }
 
       });
     },
