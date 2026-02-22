@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits, defineProps } from "vue";
+import { defineProps } from "vue";
 import { usePermisoForm } from "./composables/usePermisoForm";
 
 const props = defineProps({
